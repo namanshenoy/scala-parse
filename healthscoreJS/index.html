@@ -1,0 +1,25 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <style type="text/css">
+  #score {
+  }
+  canvas {
+    display: inline-block;
+    float:top;
+  }
+  </style>
+
+  <title>Healthscore Test</title>
+</head>
+
+<body onLoad = "document.getElementById('score').appendChild(createHealthscore(.5, 500, 100));
+                document.getElementById('score').appendChild(createHealthscore(.4, 100, 500));
+                document.getElementById('score').appendChild(createHealthscore(.8, 100, 20));">
+  <script src="healthscore.js"></script>
+  <div id = "score">
+  </div>
+</body>
+</html>
