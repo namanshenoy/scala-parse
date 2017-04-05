@@ -1,6 +1,7 @@
 var canvases = [];
 var healths = [];
 var dispHealths = [];
+var showTexts = [];
 
 var scores = 0;
 
@@ -11,7 +12,7 @@ var fontName = 'helvetica';
 var mercuryColor = '#C1272D';
 var glassColor = '#E6E6E6';
 
-function createHealthscore(healthScore, width, height) {
+function createHealthscore(healthScore, width, height, showText) {
   var score = scores;
   scores++;
 
@@ -21,6 +22,7 @@ function createHealthscore(healthScore, width, height) {
   cvs.height = height;
   healths[score] = healthScore;
   dispHealths[score] = 0;
+  showTexts[score] = showText;
   window.requestAnimationFrame(function() {draw(score);});
   return cvs;
 }
@@ -33,9 +35,9 @@ function draw(score) {
   ctx.clearRect(0, 0, w, h);
 
   if(w > h)
-    drawHoriziontal(ctx, w, h, dispHealths[score]);
+    drawHoriziontal(ctx, w, h, dispHealths[score], showTexts[score]);
   else
-    drawVertical(ctx, w, h, dispHealths[score]);
+    drawVertical(ctx, w, h, dispHealths[score], showTexts[score]);
 
   if(dispHealths[score] != healths[score]) {
     dispHealths[score] += (healths[score] - dispHealths[score]) * rate;
@@ -45,7 +47,7 @@ function draw(score) {
   }
 }
 
-function drawHoriziontal(ctx, w, h, health) {
+function drawHoriziontal(ctx, w, h, health, showText) {
   ctx.fillStyle = glassColor;
   ctx.beginPath();
   ctx.arc(h/2, h/2, h/2, 0, 2*Math.PI);
@@ -62,14 +64,16 @@ function drawHoriziontal(ctx, w, h, health) {
 
   ctx.roundRect(h/2, h/4, (w-(h/2)-borderWidth)*health, h/2, borderRadius).fill();
 
-  ctx.fillStyle = glassColor;
-  ctx.font = Math.round(Math.min(w, h)/3)+'px '+fontName;
-  var pct = Math.round(health * 100)+"%";
-  //yes, I'm using the w of the letter 'M' to approximate the height of a string... it seems to work
-  ctx.fillText(pct, (h/2) - (ctx.measureText(pct).width/2), h/2 + ctx.measureText('M').width/2);
+  if(showText) {
+    ctx.fillStyle = glassColor;
+    ctx.font = Math.round(Math.min(w, h)/3)+'px '+fontName;
+    var pct = Math.round(health * 100)+"%";
+    //yes, I'm using the w of the letter 'M' to approximate the height of a string... it seems to work
+    ctx.fillText(pct, (h/2) - (ctx.measureText(pct).width/2), h/2 + ctx.measureText('M').width/2);
+  }
 }
 
-function drawVertical(ctx, w, h, health) {
+function drawVertical(ctx, w, h, health, showText) {
   ctx.fillStyle = glassColor;
   ctx.beginPath();
   ctx.arc(w/2, h-w/2, w/2, 0, 2*Math.PI);
@@ -85,10 +89,12 @@ function drawVertical(ctx, w, h, health) {
 
   ctx.roundRect(w/4, borderWidth+(h-(w/2))*(1-health), w/2, h-w/2-(h-(w/2))*(1-health), borderRadius).fill();
 
-  ctx.fillStyle = glassColor;
-  ctx.font = Math.round(Math.min(w, h)/3)+'px '+fontName;
-  var pct = Math.round(health * 100)+"%";
-  ctx.fillText(pct, (w/2) - (ctx.measureText(pct).width/2), h - w/2 + ctx.measureText('M').width/2);
+  if(showText) {
+    ctx.fillStyle = glassColor;
+    ctx.font = Math.round(Math.min(w, h)/3)+'px '+fontName;
+    var pct = Math.round(health * 100)+"%";
+    ctx.fillText(pct, (w/2) - (ctx.measureText(pct).width/2), h - w/2 + ctx.measureText('M').width/2);
+  }
 }
 
 
